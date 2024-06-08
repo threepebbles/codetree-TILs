@@ -70,11 +70,15 @@ int get_value_in_brd(vector<int>& pos) {
 }
 
 void dfs(int pi, int brd_idx, vector<int>& pos) {
-	if (brd_idx == n * m) return;
 	if (pi == 3) {
-		ans = max(ans, get_value_in_brd(pos));
+		if (pos[0] == 0 && pos[1] == 3 && pos[2] == 11) {
+			int zz = 1;
+		}
+		int x = get_value_in_brd(pos);
+		ans = max(ans, x);
 		return;
 	}
+	if (brd_idx >= n * m) return;
 
 	for (int i = brd_idx; i < n * m; i++) {
 		int r = i / m;
