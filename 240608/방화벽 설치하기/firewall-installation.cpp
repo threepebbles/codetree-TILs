@@ -13,7 +13,6 @@ typedef struct V {
 	V(int _r, int _c) :r(_r), c(_c) {}
 };
 
-int ans;
 int get_value_in_brd(vector<int>& pos, vector<vector<int>>& brd) {
 	int n = brd.size();
 	int m = brd[0].size();
@@ -67,25 +66,26 @@ int get_value_in_brd(vector<int>& pos, vector<vector<int>>& brd) {
 	return n * m - sum;
 }
 
-void dfs(int pi, int brd_idx, vector<int>& pos, vector<vector<int>>& brd) {
+int dfs(int pi, int brd_idx, vector<int>& pos, vector<vector<int>>& brd) {
 	int n = brd.size();
 	int m = brd[0].size();
+	int ret = 0;
 
 	if (pi == 3) {
-		int x = get_value_in_brd(pos, brd);
-		ans = max(ans, x);
-		return;
+		return get_value_in_brd(pos, brd);;
 	}
-	if (brd_idx >= n * m) return;
+	if (brd_idx >= n * m) return 0;
 
 	for (int i = brd_idx; i < n * m; i++) {
 		int r = i / m;
 		int c = i % m;
 		if (brd[r][c] == 0) {
 			pos[pi] = i;
-			dfs(pi + 1, i + 1, pos, brd);
+			int x = dfs(pi + 1, i + 1, pos, brd);
+			ret = max(ret, x);
 		}
 	}
+	return ret;
 }
 
 int main() {
@@ -100,6 +100,6 @@ int main() {
 		}
 	}
 	vector<int> pos(3, 0);
-	dfs(0, 0, pos, brd);
+	int ans = dfs(0, 0, pos, brd);
 	printf("%d", ans);
 }
