@@ -58,18 +58,18 @@ int main() {
 				q.push(V(cx, cy, left_curve(cd)));
 				break;
 			}
-			cx = (cx - dx[cd] + 4) % 4;
-			cy = (cy - dy[cd] + 4) % 4;
+			cx = cx - dx[cd];
+			cy = cy - dy[cd];
 			cd = left_curve(cd);
 
 			// 4방향 다 막힌 경우
 			if (cd == cur.d) {
 				cd = right_curve(cd);
-				cx = (cx - dx[cd]+4)%4;
-				cy = (cy - dy[cd]+4)%4;
+				cx = cx - dx[cd];
+				cy = cy - dy[cd];
 				
 				// 후진, 좌회전 상태로 큐에 삽입
-				if (!is_out(cx, cy, n, m) && !brd[cx][cy] && !visited2[cx][cy][cd]) {
+				if (!is_out(cx, cy, n, m) && !brd[cx][cy] && !visited2[cx][cy][left_curve(cd)]) {
 					q.push(V(cx, cy, left_curve(cd)));
 				}
 				break;
