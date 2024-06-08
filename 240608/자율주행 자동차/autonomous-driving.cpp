@@ -52,8 +52,7 @@ int main() {
 		cd = nd;
 		cnt++;
 
-		if (cnt == 5) {
-			nd = right_curve(cd);
+		if (cnt == 4) {
 			nx = cx - dx[nd];
 			ny = cy - dy[nd];
 
