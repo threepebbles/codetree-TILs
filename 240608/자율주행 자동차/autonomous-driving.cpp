@@ -2,19 +2,12 @@
 #include <queue>
 using namespace std;
 
-typedef struct V {
-	int x, y, d;
-	V() {}
-	V(int _x, int _y, int _d) :x(_x), y(_y), d(_d) {}
-};
-
 const int MAXN = 50, MAXM = 50;
 // d : 0123 - 북동남서
 const int dx[] = {-1, 0, 1, 0};
 const int dy[] = {0, 1, 0, -1};
 int brd[MAXN][MAXM];
 bool visited[MAXN][MAXM];
-bool visited2[MAXN][MAXN][4];
 
 int left_curve(int cur_d) {
 	return (cur_d - 1 + 4) % 4;
@@ -42,7 +35,6 @@ int main() {
 
 	int cx = sx, cy = sy, cd = sd;
 	visited[cx][cy] = true;
-	visited2[cx][cy][cd] = true;
 	int cnt = 0;
 	while (true) {
 		int nd = left_curve(cd);
@@ -52,7 +44,7 @@ int main() {
 			if (!visited[nx][ny]) {
 				cx = nx, cy = ny, cd = nd;
 				visited[cx][cy] = true;
-				visited2[cx][cy][cd] = true;
+				
 				cnt = 0;
 				continue;
 			}
