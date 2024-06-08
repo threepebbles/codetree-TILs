@@ -67,7 +67,7 @@ int main() {
 			ny = cy - dy[nd];
 
 			cx = nx, cy = ny, cd = nd;
-			if (is_out(cx, cy, n, m)) break;
+			if (is_out(cx, cy, n, m) || brd[cx][cy]) break;
 			cnt = 0;
 			continue;
 		}
