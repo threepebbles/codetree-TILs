@@ -13,11 +13,11 @@ typedef struct V {
 	V(int _r, int _c) :r(_r), c(_c) {}
 };
 
-int n, m;
-int brd[MAXN][MAXM];
 int ans;
+int get_value_in_brd(vector<int>& pos, vector<vector<int>>& brd) {
+	int n = brd.size();
+	int m = brd[0].size();
 
-int get_value_in_brd(vector<int>& pos) {
 	int sum = 0;
 	for (int i = 0; i < 3; i++) {
 		int r = pos[i] / m;
@@ -25,7 +25,7 @@ int get_value_in_brd(vector<int>& pos) {
 		brd[r][c] = 1;
 	}
 
-	bool visited[MAXN][MAXM] = {};
+	vector<vector<bool>> visited(n, vector<bool>(m, false));
 	queue<V> q;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
@@ -34,7 +34,6 @@ int get_value_in_brd(vector<int>& pos) {
 			}
 		}
 	}
-
 
 	while (!q.empty()) {
 		V cur = q.front();
@@ -60,7 +59,6 @@ int get_value_in_brd(vector<int>& pos) {
 		}
 	}
 
-
 	for (int i = 0; i < 3; i++) {
 		int r = pos[i] / m;
 		int c = pos[i] % m;
@@ -69,12 +67,12 @@ int get_value_in_brd(vector<int>& pos) {
 	return n * m - sum;
 }
 
-void dfs(int pi, int brd_idx, vector<int>& pos) {
+void dfs(int pi, int brd_idx, vector<int>& pos, vector<vector<int>>& brd) {
+	int n = brd.size();
+	int m = brd[0].size();
+
 	if (pi == 3) {
-		if (pos[0] == 0 && pos[1] == 3 && pos[2] == 11) {
-			int zz = 1;
-		}
-		int x = get_value_in_brd(pos);
+		int x = get_value_in_brd(pos, brd);
 		ans = max(ans, x);
 		return;
 	}
@@ -85,21 +83,23 @@ void dfs(int pi, int brd_idx, vector<int>& pos) {
 		int c = i % m;
 		if (brd[r][c] == 0) {
 			pos[pi] = i;
-			dfs(pi + 1, i + 1, pos);
+			dfs(pi + 1, i + 1, pos, brd);
 		}
 	}
 }
 
 int main() {
+	int n, m;
 	scanf("%d %d", &n, &m);
-	
+	vector<vector<int>> brd(n, vector<int>(m, 0));
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			// 도로: 0, 인도: 1
 			scanf("%d", &brd[i][j]);
 		}
 	}
-	vector<int> pos = vector<int>{ 0, 0, 0 };
-	dfs(0, 0, pos);
+	vector<int> pos(3, 0);
+	dfs(0, 0, pos, brd);
 	printf("%d", ans);
 }
