@@ -40,40 +40,36 @@ int main() {
 		}
 	}
 
-	queue<V> q;
-	q.push(V(sx, sy, left_curve(sd)));
-	while (!q.empty()) {
-		V cur = q.front();
-		q.pop();
-		if (visited2[cur.x][cur.y][cur.d]) continue;
-		visited[cur.x][cur.y] = true;
-		visited2[cur.x][cur.y][cur.d] = true;
-
-		int cx = cur.x, cy = cur.y, cd = cur.d;
-		
-		while (true) {
-			cx = cx + dx[cd];
-			cy = cy + dy[cd];
-			if (!is_out(cx, cy, n, m) && !brd[cx][cy] && !visited[cx][cy]) {
-				q.push(V(cx, cy, left_curve(cd)));
-				break;
+	int cx = sx, cy = sy, cd = sd;
+	visited[cx][cy] = true;
+	visited2[cx][cy][cd] = true;
+	int cnt = 0;
+	while (true) {
+		int nd = left_curve(cd);
+		int nx = cx + dx[nd];
+		int ny = cy + dy[nd];
+		if (!is_out(nx, ny, n, m) && !brd[nx][ny]) {
+			if (!visited[nx][ny]) {
+				cx = nx, cy = ny, cd = nd;
+				visited[cx][cy] = true;
+				visited2[cx][cy][cd] = true;
+				cnt = 0;
+				continue;
 			}
-			cx = cx - dx[cd];
-			cy = cy - dy[cd];
-			cd = left_curve(cd);
+		}
 
-			// 4방향 다 막힌 경우
-			if (cd == cur.d) {
-				cd = right_curve(cd);
-				cx = cx - dx[cd];
-				cy = cy - dy[cd];
-				
-				// 후진, 좌회전 상태로 큐에 삽입
-				if (!is_out(cx, cy, n, m) && !brd[cx][cy] && !visited2[cx][cy][left_curve(cd)]) {
-					q.push(V(cx, cy, left_curve(cd)));
-				}
-				break;
-			}
+		cd = nd;
+		cnt++;
+
+		if (cnt == 5) {
+			nd = right_curve(cd);
+			nx = cx - dx[nd];
+			ny = cy - dy[nd];
+
+			cx = nx, cy = ny, cd = nd;
+			if (is_out(cx, cy, n, m)) break;
+			cnt = 0;
+			continue;
 		}
 	}
 
