@@ -50,8 +50,6 @@ bool is_available(vector<int>& line) {
 				if (psum[i - 1] < L) return false;
 
 				for (int ci = 0; ci < L; ci++) {
-					// 경사로의 길이만큼 낮은 칸의 보도블럭이 연속하지 않는 경우
-					if (i - 1 - ci < 0) return false;
 					// 이미 경사로가 놓여있는데 또 놓아야하는 경우
 					if (chk[i - 1 - ci]) return false;
 
@@ -64,8 +62,6 @@ bool is_available(vector<int>& line) {
 				if (psum_reverse[i] < L) return false;
 
 				for (int ci = 0; ci < L; ci++) {
-					// 경사로의 길이만큼 낮은 칸의 보도블럭이 연속하지 않는 경우
-					if(i + ci >= lsz) return false;
 					// 이미 경사로가 놓여있는데 또 놓아야하는 경우
 					if (chk[i + ci]) return false;
 
