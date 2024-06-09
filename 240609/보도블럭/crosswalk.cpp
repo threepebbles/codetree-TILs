@@ -40,7 +40,7 @@ bool is_available(vector<int>& line) {
 	}
 
 	
-	//  판별
+	// 판별
 	vector<bool> chk(lsz, false);
 	for (int i = 1; i < lsz; i++) {
 		if (psum[i - 1] >= psum[i]) {
@@ -50,8 +50,11 @@ bool is_available(vector<int>& line) {
 				if (psum[i - 1] < L) return false;
 
 				for (int ci = 0; ci < L; ci++) {
+					// 경사로의 길이만큼 낮은 칸의 보도블럭이 연속하지 않는 경우
+					if (i - 1 - ci < 0) return false;
 					// 이미 경사로가 놓여있는데 또 놓아야하는 경우
-					if (i - 1 - ci < 0 || chk[i - 1 - ci]) return false;
+					if (chk[i - 1 - ci]) return false;
+
 					chk[i - 1 - ci] = true;
 				}
 			}
@@ -59,9 +62,13 @@ bool is_available(vector<int>& line) {
 			else if(line[i-1] > line[i]) {
 				// 너무 짧아서 경사로를 놓을 수 없는 경우
 				if (psum_reverse[i] < L) return false;
+
 				for (int ci = 0; ci < L; ci++) {
+					// 경사로의 길이만큼 낮은 칸의 보도블럭이 연속하지 않는 경우
+					if(i + ci >= lsz) return false;
 					// 이미 경사로가 놓여있는데 또 놓아야하는 경우
-					if (i + ci < 0 || chk[i + ci]) return false;
+					if (chk[i + ci]) return false;
+
 					chk[i + ci] = true;
 				}
 			}
