@@ -29,17 +29,17 @@ void rotate(int i, int d) {
 void rotate_leftside(int i, int d) {
 	if (i <= -1) return;
 
-	rotate_leftside(i - 1, -d);
 	if (brd[i][2] != brd[i + 1][6]) {
+		rotate_leftside(i - 1, -d);
 		rotate(i, d);
 	}
 }
 
 void rotate_rightside(int i, int d) {
 	if (i >= 4) return;
-
-	rotate_rightside(i + 1, -d);
+	
 	if (brd[i-1][2] != brd[i][6]) {
+		rotate_rightside(i + 1, -d);
 		rotate(i, d);
 	}
 }
