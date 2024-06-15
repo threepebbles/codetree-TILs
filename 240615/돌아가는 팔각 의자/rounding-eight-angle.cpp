@@ -1,7 +1,4 @@
 #include <cstdio>
-#include <vector>
-using namespace std;
-
 char brd[4][9];
 
 void rotate_clockwise(char* chair) {
@@ -61,7 +58,7 @@ int main() {
 	}
 
 	int ans = 0;
-	for (int i = 3; i >=0; i--) {
+	for (int i = 3; i >= 0; i--) {
 		if (brd[i][0] == '1') ans++;
 		if (i != 0) ans <<= 1;
 	}
