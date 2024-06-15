@@ -2,70 +2,51 @@
 #include <vector>
 using namespace std;
 
-int rotate_clockwise(int x) {
-	int ret = ((x << 1) & 0xFF);
-	if ((x & (1 << 7))) ret += 1;
-	return ret;
-}
+char brd[4][9];
 
-int rotate_counter_clockwise(int x) {
-	int ret = ((x >> 1) & 0xFF);
-	if ((x & 1)) ret += (1 << 7);
-	return ret;
-}
-
-// x를 d방향으로 회전 d가 -1이면 >> / d가 1이면 <<
-int rotate_bit(int x, int d) {
-	if (d == -1) return rotate_counter_clockwise(x);
-	return rotate_clockwise(x);
-}
-
-// x의 n번째 비트가 0이면 0, 1이면 1반환 
-int extract_bit(int x, int n) {
-	int ret = (x >> n) & 1;
-	return ret;
-}
-
-vector<int> rotate(int n, int d, vector<int> brd) {
-	// n번 팔각 의자를 방향 d로 45도 회전
-	int bit2 = (1 << 2);
-	int bit6 = (1 << 6);
-
-	vector<int> new_brd = brd;
-	
-	// n의자와 6번째 비트와 n-1의자의 3번째 비트가 일치할 때까지 회전
-	for (int i = n - 1, d2 = -d; i >= 0; i--, d2 *= -1) {
-		if (extract_bit(brd[i + 1], 6) != extract_bit(brd[i], 2)) {
-			new_brd[i] = rotate_bit(brd[i], d2);
-		}
+void rotate_clockwise(char* chair) {
+	char tmp = chair[7];
+	for (int i = 7; i > 0; i--) {
+		chair[i] = chair[i-1];
 	}
+	chair[0] = tmp;
+}
 
-	// n의자의 2번째 비트와 n+1의자의 6번째 비트가 일치할 때까지 회전
-	for (int i = n + 1, d2 = -d; i < 4; i++, d2 *= -1) {
-		if (extract_bit(brd[i - 1], 2) != extract_bit(brd[i], 6)) {
-			new_brd[i] = rotate_bit(brd[i], d2);
-		}
+void rotate_counter_clockwise(char* chair) {
+	char tmp = chair[0];
+	for (int i = 0; i < 7; i++) {
+		chair[i] = chair[i + 1];
 	}
-	brd = new_brd;
-	if (d == -1) brd[n] = rotate_counter_clockwise(brd[n]);
-	else brd[n] = rotate_clockwise(brd[n]);
-	return brd;
+	chair[7] = tmp;
+}
+
+void rotate(int i, int d) {
+	if (d == -1) rotate_counter_clockwise(brd[i]);
+	else rotate_clockwise(brd[i]);
+}
+
+// brd[i]를 d방향으로 회전
+void rotate_leftside(int i, int d) {
+	if (i <= -1) return;
+
+	rotate_leftside(i - 1, -d);
+	if (brd[i][2] != brd[i + 1][6]) {
+		rotate(i, d);
+	}
+}
+
+void rotate_rightside(int i, int d) {
+	if (i >= 4) return;
+
+	rotate_rightside(i + 1, -d);
+	if (brd[i-1][2] != brd[i][6]) {
+		rotate(i, d);
+	}
 }
 
 int main() {
-	// 북쪽: 0, 남쪽: 1
-	vector<int> brd;
-	char buf[9];
 	for (int i = 0; i < 4; i++) {
-		scanf("%s", buf);
-		int bit = 0;
-		for (int j = 7; j >= 0; j--) {
-			if (buf[j] == '1') {
-				bit += 1;
-			}
-			if (j != 0) bit <<= 1;
-		}
-		brd.push_back(bit);
+		scanf("%s", brd[i]);
 	}
 
 	int k;
@@ -74,12 +55,15 @@ int main() {
 		// 반시계: -1, 시계: 1
 		scanf("%d %d", &n, &d);
 		n--;
-		brd = rotate(n, d, brd);
+		rotate_leftside(n - 1, -d);
+		rotate_rightside(n + 1, -d);
+		rotate(n, d);
 	}
 
 	int ans = 0;
-	for (int i = 0; i < 4; i++) {
-		ans += ((brd[i] & 1) << i);
+	for (int i = 3; i >=0; i--) {
+		if (brd[i][0] == '1') ans++;
+		if (i != 0) ans <<= 1;
 	}
 	printf("%d", ans);
 }
