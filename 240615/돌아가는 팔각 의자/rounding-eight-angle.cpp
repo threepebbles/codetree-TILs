@@ -2,8 +2,6 @@
 #include <vector>
 using namespace std;
 
-bitset<8> bs;
-
 int rotate_clockwise(int x) {
 	int ret = ((x << 1) & 0xFF);
 	if ((x & (1 << 7))) ret += 1;
