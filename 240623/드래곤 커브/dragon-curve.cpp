@@ -24,8 +24,8 @@ struct DragonCurve {
 const int MAXN = 20;
 const int MAXX = 100, MAXY = 100;
 // 오른쪽, 위쪽, 왼쪽, 아래쪽 순
-const int dr[] = { 0, -1, 0, 1 };
-const int dc[] = { 1, 0, -1, 0 };
+const int dx[] = { 0, -1, 0, 1 };
+const int dy[] = { 1, 0, -1, 0 };
 
 int n;
 int brd[MAXX+2][MAXY+2];
@@ -49,24 +49,14 @@ DragonCurve draw_dragon_curve(int sx, int sy, int d, int g) {
 
 	// 0차 시작
 	vs.push_back(V(sx, sy));
-	vs.push_back(V(sx + dr[d], sy + dc[d]));
+	vs.push_back(V(sx + dx[d], sy + dy[d]));
 
+	V v_far = vs[1];
 	// i차 드래곤 커브 그리기
 	for (int gi = 1; gi <= g; gi++) {
 		vector<V> new_vs;
 
-		// 시작점으로부터 가장 먼점 찾기
-		int diff_max = 0;
-		V v_far;
-		for (V& v : vs) {
-			// 맨하탄 거리로 거리 계산
-			int diff = abs(sx - v.x) + abs(sy - v.y);
-			if (diff > diff_max) {
-				v_far = v;
-				diff_max = diff;
-			}
-		}
-
+		V new_v_far;
 		// 가장 먼점 기준으로 모든 점 -90도 회전
 		for (V& v : vs) {
 			new_vs.push_back(v);
@@ -75,6 +65,8 @@ DragonCurve draw_dragon_curve(int sx, int sy, int d, int g) {
 			rotated.x += v_far.x;
 			rotated.y += v_far.y;
 			new_vs.push_back(rotated);
+
+			if (v.x == sx && v.y == sy) new_v_far = rotated;
 		}
 
 		sort(new_vs.begin(), new_vs.end(), [](const V& v1, const V& v2) -> bool {
@@ -83,6 +75,7 @@ DragonCurve draw_dragon_curve(int sx, int sy, int d, int g) {
 		new_vs.erase(unique(new_vs.begin(), new_vs.end(), custom_equel_to), new_vs.end());
 
 		vs = new_vs;
+		v_far = new_v_far;
 	}
 
 	return DragonCurve(sx, sy, d, g, vs);
@@ -99,8 +92,8 @@ int main() {
 	}
 
 	
-	for (DragonCurve& dc : dcs) {
-		for (V& v : dc.vs) {
+	for (DragonCurve& dragon_curve : dcs) {
+		for (V& v : dragon_curve.vs) {
 			if (v.x < 0 || v.x > MAXX || v.y < 0 || v.y > MAXY) continue;
 			brd[v.x][v.y] = 1;
 		}
