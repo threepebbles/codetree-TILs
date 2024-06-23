@@ -21,13 +21,6 @@ int add_amount[MAXN][MAXN];	// 추가되는 양분의 양
 vector<Virus> do_cycle(vector<Virus>& vs) {
 	vector<Virus> new_vs;
 
-	// age순 오름차순 정렬
-	sort(vs.begin(), vs.end(),
-		[](const Virus& x, const Virus& y) -> bool {
-			return x.age < y.age;
-		});
-	
-
 	// 양분 섭취
 	for (Virus& v : vs) {
 		if (brd[v.r][v.c] >= v.age) {
@@ -91,6 +84,12 @@ int main() {
 		r--, c--;
 		vs.push_back(Virus(r, c, age, true));
 	}
+
+	// age순 오름차순 정렬
+	sort(vs.begin(), vs.end(),
+		[](const Virus& x, const Virus& y) -> bool {
+			return x.age < y.age;
+		});
 
 	while (k--) {
 		vs = do_cycle(vs);
