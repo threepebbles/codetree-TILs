@@ -63,6 +63,8 @@ priority_queue<Virus, vector<Virus>, cmp> do_cycle(priority_queue<Virus, vector<
 	}
 
 	priority_queue<Virus, vector<Virus>, cmp> ret;
+	queue<Virus> tmp;
+
 	// 번식 진행
 	while (!new_vs.empty()) {
 		Virus v = new_vs.front();
@@ -78,8 +80,16 @@ priority_queue<Virus, vector<Virus>, cmp> do_cycle(priority_queue<Virus, vector<
 			int nr = v.r + dr[d];
 			int nc = v.c + dc[d];
 			if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue;
-			ret.push(Virus(nr, nc, 1, true));
+			
+			tmp.push(Virus(nr, nc, 1, true));
 		}
+	}
+
+	while (!tmp.empty()) {
+		Virus v = tmp.front();
+		tmp.pop();
+
+		ret.push(v);
 	}
 
 	// 양분 추가
