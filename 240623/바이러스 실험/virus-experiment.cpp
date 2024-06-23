@@ -97,9 +97,3 @@ int main() {
 	}
 	printf("%d", vs.size());
 }
-
-	while (k--) {
-		vs = do_cycle(vs);
-	}
-	printf("%d", vs.size());
-}
