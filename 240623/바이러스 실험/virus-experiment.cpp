@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <vector>
 #include <algorithm>
-#include <queue>
 using namespace std;
 
 struct Virus {
@@ -9,12 +8,6 @@ struct Virus {
 	int age;
 	bool alive;
 	Virus(int _r, int _c, int _age, bool _alive) : r(_r), c(_c), age(_age), alive(_alive) {}
-};
-
-struct cmp {
-	bool operator() (Virus a, Virus b) {
-		return a.age > b.age;
-	}
 };
 
 const int MAXN = 10;
@@ -25,53 +18,37 @@ int n, m, k;
 int brd[MAXN][MAXN];
 int add_amount[MAXN][MAXN];	// 추가되는 양분의 양
 
-priority_queue<Virus, vector<Virus>, cmp> do_cycle(priority_queue<Virus, vector<Virus>, cmp>& vs) {
-	queue<Virus> new_vs;
+vector<Virus> do_cycle(vector<Virus>& vs) {
+	vector<Virus> new_vs;
 
 	// age순 오름차순 정렬
-	/*sort(vs.begin(), vs.end(),
+	sort(vs.begin(), vs.end(),
 		[](const Virus& x, const Virus& y) -> bool {
 			return x.age < y.age;
-		});*/
+		});
+	
 
-	queue<Virus> dead;
 	// 양분 섭취
-	while(!vs.empty()) {
-		Virus v = vs.top();
-		vs.pop();
-
+	for (Virus& v : vs) {
 		if (brd[v.r][v.c] >= v.age) {
 			brd[v.r][v.c] -= v.age;
 			v.age++;
-			new_vs.push(v);
+			new_vs.push_back(v);
 		}
 		else {
 			// 아사
 			v.alive = false;
-			dead.push(v);
 		}
 	}
 
 	// 죽은 바이러스는 양분으로
-	
-	while (!dead.empty()) {
-		Virus v = dead.front();
-		dead.pop();
-
+	for (Virus& v : vs) {
 		if (v.alive) continue;
 		brd[v.r][v.c] += v.age / 2;
 	}
 
-	priority_queue<Virus, vector<Virus>, cmp> ret;
-	queue<Virus> tmp;
-
 	// 번식 진행
-	while (!new_vs.empty()) {
-		Virus v = new_vs.front();
-		new_vs.pop();
-
-		ret.push(v);
-
+	for (Virus& v : vs) {
 		if (!v.alive) continue;
 		if (v.age % 5 != 0) continue;
 
@@ -80,16 +57,8 @@ priority_queue<Virus, vector<Virus>, cmp> do_cycle(priority_queue<Virus, vector<
 			int nr = v.r + dr[d];
 			int nc = v.c + dc[d];
 			if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue;
-			
-			tmp.push(Virus(nr, nc, 1, true));
+			new_vs.push_back(Virus(nr, nc, 1, true));
 		}
-	}
-
-	while (!tmp.empty()) {
-		Virus v = tmp.front();
-		tmp.pop();
-
-		ret.push(v);
 	}
 
 	// 양분 추가
@@ -98,7 +67,13 @@ priority_queue<Virus, vector<Virus>, cmp> do_cycle(priority_queue<Virus, vector<
 			brd[i][j] += add_amount[i][j];
 		}
 	}
-	return ret;
+
+	sort(new_vs.begin(), new_vs.end(),
+		[](const Virus& x, const Virus& y) -> bool {
+			return x.age < y.age;
+		});
+
+	return new_vs;
 }
 
 int main() {
@@ -110,12 +85,18 @@ int main() {
 		}
 	}
 
-	priority_queue<Virus, vector<Virus>, cmp> vs;
+	vector<Virus> vs;
 	for (int i = 0, r, c, age; i < m; i++) {
 		scanf("%d %d %d", &r, &c, &age);
 		r--, c--;
-		vs.push(Virus(r, c, age, true));
+		vs.push_back(Virus(r, c, age, true));
 	}
+
+	while (k--) {
+		vs = do_cycle(vs);
+	}
+	printf("%d", vs.size());
+}
 
 	while (k--) {
 		vs = do_cycle(vs);
