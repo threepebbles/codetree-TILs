@@ -101,7 +101,7 @@ int main() {
 	
 	for (DragonCurve& dc : dcs) {
 		for (V& v : dc.vs) {
-			if (v.x < 0 || v.x >= MAXX || v.y < 0 || v.y >= MAXY) continue;
+			if (v.x < 0 || v.x > MAXX || v.y < 0 || v.y > MAXY) continue;
 			brd[v.x][v.y] = 1;
 		}
 	}
