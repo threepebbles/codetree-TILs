@@ -39,7 +39,7 @@ void dfs(int posi, int hi) {
 	if(posi > m) return;
 	if (hi >= hs.size()) return;
 
-	for (int i = posi; i < hs.size(); i++) {
+	for (int i = hi; i < hs.size(); i++) {
 		pos[posi] = i;
 		dfs(posi + 1, i + 1);
 	}
