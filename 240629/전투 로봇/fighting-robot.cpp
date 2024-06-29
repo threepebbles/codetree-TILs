@@ -114,6 +114,7 @@ int main() {
 			scanf("%d", &brd[i][j]);
 			if (brd[i][j] == 9) {
 				robot = Robot(Crd(i, j), 2);
+				brd[i][j] = 0;
 			}
 		}
 	}
