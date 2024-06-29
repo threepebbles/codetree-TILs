@@ -39,7 +39,7 @@ bool visited[MAXN][MAXN];
 Crd choose_crd_by_rule(Crd crd_monster1, Crd crd_monster2) {
 	Crd list_monster[] = { crd_monster1, crd_monster2 };
 	sort(list_monster, list_monster + 2, [](const Crd& c1, const Crd& c2) -> bool {
-		return c1.r == c2.r ? c1.c < c2.c : c1.r < c2.c;
+		return c1.r == c2.r ? c1.c < c2.c : c1.r < c2.r;
 	});
 	return list_monster[0];
 }
