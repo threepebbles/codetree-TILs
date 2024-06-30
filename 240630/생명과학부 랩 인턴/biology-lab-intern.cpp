@@ -24,12 +24,15 @@ int n, m, k;
 V brd[MAXN][MAXM];
 V new_brd[MAXN][MAXM] = {};
 
+// 채취할 곰팡이 탐색
 // O(n)
 V find_pange_and_erase(int col) {
 	V ret = V();
 	for (int r = 0; r < n; r++) {
 		if (brd[r][col].b != 0) {
 			ret = brd[r][col];
+
+			// 채취한 곰팡이 제거
 			brd[r][col] = V();
 			break;
 		}
@@ -51,7 +54,6 @@ V choose(V v1, V v2) {
 
 // O(n*m)
 void move_for_second() {
-	memset(new_brd, 0, sizeof(new_brd));
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			if (brd[i][j].b > 0) {
@@ -96,6 +98,9 @@ void move_for_second() {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			brd[i][j] = new_brd[i][j];
+
+			// initialize
+			new_brd[i][j] = V();
 		}
 	}
 }
