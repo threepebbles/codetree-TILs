@@ -1,3 +1,7 @@
+/*
+* 종전
+* 시간복잡도: O(n^5)
+*/
 #include <cstdio>
 #include <algorithm>
 #include <vector>
