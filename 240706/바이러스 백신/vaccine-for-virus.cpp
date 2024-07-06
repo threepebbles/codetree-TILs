@@ -1,3 +1,7 @@
+/*
+* 바이러스 백신
+* 시간복잡도: 최악에 10C5 * n^2
+*/
 #include <cstdio>
 #include <vector>
 #include <queue>
@@ -5,10 +9,10 @@
 #include <algorithm>
 using namespace std;
 
-struct H{
+struct H {
 	int r, c;
 	H() {}
-	H(int _r, int _c):r(_r), c(_c){}
+	H(int _r, int _c) :r(_r), c(_c) {}
 };
 
 const int INF = 1e9;
@@ -36,14 +40,14 @@ bool is_in_range(int r, int c) {
 
 int bfs(vector<int>& selected) {
 	memset(dis, -1, sizeof(dis));
-	
+
 	queue<H> que;
 	for (int i = 0; i < m; i++) {
 		H h = hospitals[selected[i]];
 		que.push(h);
 		dis[h.r][h.c] = 0;
 	}
-	
+
 	while (!que.empty()) {
 		H cur = que.front();
 		que.pop();
@@ -64,7 +68,7 @@ int bfs(vector<int>& selected) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			if (brd[i][j] == VIRUS) {
-				if(dis[i][j] == -1)
+				if (dis[i][j] == -1)
 					return INF;
 				mx = max(mx, dis[i][j]);
 			}
