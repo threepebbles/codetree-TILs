@@ -35,7 +35,6 @@ bool is_in_range(int r, int c) {
 }
 
 int bfs(vector<int>& selected) {
-	int mx = 0;
 	memset(dis, -1, sizeof(dis));
 	
 	queue<H> que;
@@ -53,19 +52,21 @@ int bfs(vector<int>& selected) {
 			int nr = cur.r + dr[d];
 			int nc = cur.c + dc[d];
 			if (!is_in_range(nr, nc)) continue;
-			if (brd[nr][nc] != VIRUS) continue;
+			if (brd[nr][nc] == WALL) continue;
 			if (dis[nr][nc] != -1) continue;
 
 			que.push(H(nr, nc));
 			dis[nr][nc] = dis[cur.r][cur.c] + 1;
-			mx = max(mx, dis[nr][nc]);
 		}
 	}
 
+	int mx = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (brd[i][j] == VIRUS && dis[i][j] == -1) {
-				return INF;
+			if (brd[i][j] == VIRUS) {
+				if(dis[i][j] == -1)
+					return INF;
+				mx = max(mx, dis[i][j]);
 			}
 		}
 	}
