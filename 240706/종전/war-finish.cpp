@@ -52,28 +52,28 @@ int main() {
 					vector<int> sum(6, 0);
 					// 2번 부족: 좌측 상단
 					for (int r = r_left - 1, add = 0; r >= 0; r--, add++) {
-						for (int c = c_left + add; c >= 0; c--) {
+						for (int c = min(c_top, c_left + add); c >= 0; c--) {
 							sum[2] += brd[r][c];
 						}
 					}
 
 					// 3번 부족: 우측 상단
 					for (int c = c_top + 1, add = 0; c < n; c++, add++) {
-						for (int r = r_top + add; r >= 0; r--) {
+						for (int r = min(r_right, r_top + add); r >= 0; r--) {
 							sum[3] += brd[r][c];
 						}
 					}
 
 					// 4번 부족: 좌측 하단
 					for (int c = c_bottom - 1, add = 0; c >= 0; c--, add--) {
-						for (int r = r_bottom + add; r < n; r++) {
+						for (int r = max(r_left, r_bottom + add); r < n; r++) {
 							sum[4] += brd[r][c];
 						}
 					}
 					
-					// 5번 부족
+					// 5번 부족: 우측 하단
 					for (int r = r_right + 1, add = 0; r < n; r++, add--) {
-						for (int c = c_right + add; c < n; c++) {
+						for (int c = max(c_bottom, c_right + add); c < n; c++) {
 							sum[5] += brd[r][c];
 						}
 					}
