@@ -33,7 +33,7 @@ int dr[] = { -1, 0, 1, 0 };
 int dc[] = { 0, -1, 0, 1 };
 bool visited[MAXN][MAXM];
 int dfs(int cr, int cc, int num) {
-	if (brd[cr][cc] == 0 || visited[cr][cc]) return 0;
+	if (brd[cr][cc] == 0 || visited[cr][cc]) return 1;
 	brd[cr][cc] = 0;
 	visited[cr][cc] = true;
 	int ret = 1;
