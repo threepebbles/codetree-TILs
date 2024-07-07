@@ -105,11 +105,6 @@ int main() {
 		else if (d == UP) d = 0;
 		else if (d == DOWN) d = 2;
 
-		if (!is_in_range(x, y) || brd[x][y] == BLUE) {
-			puts("-1");
-			return 0;
-		}
-
 		horses.push_back(H(x, y, d, 0));
 		state[x][y].push_back(horses.size() - 1);
 	}
