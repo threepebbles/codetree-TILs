@@ -111,6 +111,11 @@ int main() {
 		else if (d == UP) d = 0;
 		else if (d == DOWN) d = 2;
 
+		if (brd[x][y] == BLUE) {
+			puts("-1");
+			return 0;
+		}
+
 		horses.push_back(H(x, y, d, 0));
 		state[x][y].push_back(horses.size() - 1);
 	}
@@ -121,9 +126,9 @@ int main() {
 		turn++;
 
 		// 이동
-		for (int i = 0; i < horses.size(); i++) {
+		for (int i = 0; i < horses.size() && !is_end; i++) {
 			is_end |= do_move(i);
 		}
 	}
-	printf("%d", turn == MAX_TURN ? -1 : turn);
+	printf("%d", turn >= MAX_TURN ? -1 : turn);
 }
