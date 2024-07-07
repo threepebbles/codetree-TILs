@@ -10,10 +10,16 @@ struct V {
 };
 
 const int MAXN = 51, MAXM = 51;
-int n, m, q;
-vector<int> brd[MAXN];
-int start_idx[MAXN];
+// 상, 좌, 하, 우
+const int dr[] = { -1, 0, 1, 0 };
+const int dc[] = { 0, -1, 0, 1 };
 
+int n, m, q;
+int start_idx[MAXN];
+vector<int> brd[MAXN];
+bool visited[MAXN][MAXM];
+
+// O(1)
 void rotate_circle(int tx, int d, int k) {
 	if (d == 1) {
 		start_idx[tx] = (start_idx[tx] + k) % m;
@@ -41,10 +47,6 @@ V original_idx_to_brd_idx(int r_origin, int c_origin) {
 	return V(r_origin, (start_idx[r_origin] + c_origin + m) % m);
 }
 
-// 상, 좌, 하, 우
-int dr[] = { -1, 0, 1, 0 };
-int dc[] = { 0, -1, 0, 1 };
-bool visited[MAXN][MAXM];
 // origin 위치 기준으로 순회
 int dfs(int r_brd, int c_brd, int r_origin, int c_origin, int num) {
 	if (brd[r_brd][c_brd] == 0 || visited[r_origin][c_origin]) return 0;
@@ -119,7 +121,7 @@ int main() {
 		memset(visited, false, sizeof(visited));
 		for (int r_brd = 1; r_brd <= n; r_brd++) {
 			for (int c_brd = 0; c_brd < m; c_brd++) {
-				// original_crd: brd[i][j]에 저장되어 있는 값의 원래 위치
+				// original_idx: brd[r_brd][c_brd]에 저장되어 있는 값의 원래 위치
 				V original_idx = brd_idx_to_original_idx(r_brd, c_brd);
 				int r_origin = original_idx.r;
 				int c_origin = original_idx.c;
@@ -137,6 +139,7 @@ int main() {
 				}
 			}
 		}
+		
 		if (!is_erased) {
 			normalize();
 		}
