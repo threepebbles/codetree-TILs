@@ -33,14 +33,14 @@ int dr[] = { -1, 0, 1, 0 };
 int dc[] = { 0, -1, 0, 1 };
 bool visited[MAXN][MAXM];
 int dfs(int cr, int cc, int num) {
-	if (brd[cr][cc] == 0 || visited[cr][cc]) return 1;
+	if (brd[cr][cc] == 0 || visited[cr][cc]) return 0;
 	brd[cr][cc] = 0;
 	visited[cr][cc] = true;
 	int ret = 1;
 	
 	for (int d = 0; d < 4; d++) {
 		int nr = cr + dr[d];
-		int nc = cc + dc[d];
+		int nc = (cc + dc[d]+m)%m;
 		if (!is_in_range(nr, nc)) continue;
 		if (brd[nr][nc] == 0 || visited[nr][nc]) continue;
 		if (brd[nr][nc] != num) continue;
@@ -66,8 +66,9 @@ void normalize() {
 	for (int i = 1; i <= n; i++) {
 		for (int j = 0; j < m; j++) {
 			if (brd[i][j] == 0) continue;
+
 			if (brd[i][j] < avg) brd[i][j]++;
-			if (brd[i][j] > avg) brd[i][j]--;
+			else if (brd[i][j] > avg) brd[i][j]--;
 		}
 	}
 }
@@ -95,10 +96,13 @@ int main() {
 		memset(visited, false, sizeof(visited));
 		for (int i = 1; i <= n; i++) {
 			for (int j = 0; j < m; j++) {
-				if (brd[i][j] == 0) continue;
+				if (brd[i][j] == 0 || visited[i][j]) continue;
+
 				int target_num = brd[i][j];
 				int cnt = dfs(i, j, target_num);
-				if (cnt == 1) brd[i][j] = target_num;
+				if (cnt <= 1) {
+					brd[i][j] = target_num;
+				}
 				else {
 					is_erased = true;
 				}
