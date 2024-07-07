@@ -54,19 +54,9 @@ bool do_move(int hidx) {
 		if (!is_in_range(nx, ny) || brd[nx][ny] == BLUE) {
 			return false;
 		}
-
-		// 얹혀 있는 말 포함 이동
-		int cur_f = h.floor;
-		int sz = state[h.x][h.y].size();
-		for (int f = cur_f; f < sz; f++) {
-			horses[state[h.x][h.y][f]].floor = state[nx][ny].size();
-			state[nx][ny].push_back(state[h.x][h.y][f]);
-		}
-		for (int f = cur_f; f < sz; f++) {
-			state[h.x][h.y].pop_back();
-		}
 	}
-	else if (brd[nx][ny] == WHITE) {
+	
+	if (brd[nx][ny] == WHITE) {
 		// 얹혀 있는 말 포함 이동
 		int cur_f = h.floor;
 		int sz = state[h.x][h.y].size();
@@ -92,6 +82,10 @@ bool do_move(int hidx) {
 	}
 	update_crd(nx, ny);
 
+	if (!(h.x == nx && h.y == ny)) {
+		printf("not same\n");
+
+	}
 	return state[h.x][h.y].size() >= 4;
 }
 
@@ -111,7 +105,7 @@ int main() {
 		else if (d == UP) d = 0;
 		else if (d == DOWN) d = 2;
 
-		if (brd[x][y] == BLUE) {
+		if (!is_in_range(x, y) || brd[x][y] == BLUE) {
 			puts("-1");
 			return 0;
 		}
