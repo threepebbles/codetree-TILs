@@ -18,30 +18,20 @@ void put_type1(int x, int y, int bnum, vector<vector<int>>& brd) {
 		}
 	}
 
-	// 바닥에 착지
-	brd[row-1][y] = bnum;
+	brd[row - 1][y] = bnum;
 }
 
 // 가로 (1 x 2)
 void put_type2(int x, int y, int bnum, vector<vector<int>>& brd) {
-	int row_left = ROW_SIZE;
+	int row = ROW_SIZE;
 	for (int r = 2; r < ROW_SIZE; r++) {
 		// 내려가다 블록 마주침
-		if (brd[r][y]) {
-			row_left = r;
+		if (brd[r][y] || brd[r][y+1]) {
+			row = r;
 			break;
 		}
 	}
 
-	int row_right = ROW_SIZE;
-	for (int r = 2; r < ROW_SIZE; r++) {
-		// 내려가다 블록 마주침
-		if (brd[r][y+1]) {
-			row_right = r;
-			break;
-		}
-	}
-	int row = min(row_left, row_right);
 	brd[row - 1][y] = bnum;
 	brd[row - 1][y + 1] = bnum;
 }
@@ -62,7 +52,7 @@ void put_type3(int x, int y, int bnum, vector<vector<int>>& brd) {
 int get_score(vector<vector<int>>& brd) {
 	int score = 0;
 	bool chk[ROW_SIZE] = {};
-	
+
 	for (int i = 2; i < ROW_SIZE; i++) {
 		int cnt = 0;
 		for (int j = 0; j < COL_SIZE; j++) {
@@ -86,7 +76,7 @@ int get_score(vector<vector<int>>& brd) {
 			new_brd.push_back(brd[i]);
 		}
 	}
-	
+
 	brd = new_brd;
 	return score;
 }
@@ -103,7 +93,7 @@ void remove_upper(vector<vector<int>>& brd) {
 			pop_cnt++;
 		}
 	}
-	
+
 	for (int i = 0; i < pop_cnt; i++) {
 		brd.pop_back();
 	}
