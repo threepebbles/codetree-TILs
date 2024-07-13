@@ -13,7 +13,7 @@ struct V {
 	int r, c, d;
 	int num;
 	V() {}
-	V(int _r, int _c, int _d, int _num): r(_r), c(_c), d(_d), num(_num) {}
+	V(int _r, int _c, int _d, int _num) : r(_r), c(_c), d(_d), num(_num) {}
 };
 
 bool is_in_range(int r, int c) {
@@ -35,15 +35,15 @@ void move_thieves(V& chaser, vector<V>& ts) {
 	for (int i = 0; i < ts.size(); i++) {
 		// 잡힌 도둑 패스
 		if (ts[i].d == -1) continue;
-		
+
 		int d_st = ts[i].d;
 		int nd = ts[i].d;
 		while (true) {
 			int nr = ts[i].r + dr[nd];
 			int nc = ts[i].c + dc[nd];
 			// 격자 밖이거나, 술래가 있는 경우
-			if (!is_in_range(nr, nc) 
-				|| (ts[i].r==chaser.r && ts[i].c==chaser.c)) {
+			if (!is_in_range(nr, nc)
+				|| (nr == chaser.r && nc == chaser.c)) {
 				nd++;
 				nd %= 8;
 
@@ -53,7 +53,7 @@ void move_thieves(V& chaser, vector<V>& ts) {
 				}
 				continue;
 			}
-			
+
 			ts[i].d = nd;
 			int num_target = find_thief_idx(nr, nc, ts);
 			//빈칸
@@ -82,7 +82,7 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 		int nr = r + dr[d];
 		int nc = c + dc[d];
 		if (!is_in_range(nr, nc)) break;
-		
+
 		r = nr, c = nc;
 		int num_thief = find_thief_idx(r, c, ts);
 		if (num_thief != -1) {
@@ -95,7 +95,7 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 		return;
 	}
 
-	for (int ti: cands) {
+	for (int ti : cands) {
 		V cand = ts[ti];
 		int score_next = score + cand.num;
 		V chaser_next = V(cand.r, cand.c, cand.d, chaser.num);
@@ -126,7 +126,7 @@ int main() {
 	int ti = find_thief_idx(0, 0, ts);
 	int score_next = ts[ti].num;
 	chaser = V(0, 0, ts[ti].d, NUM_CHASER);
-	
+
 	vector<V> ts_next = ts;
 	ts_next.erase(ts_next.begin() + ti);
 
