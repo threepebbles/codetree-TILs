@@ -11,8 +11,9 @@ const int dc[] = { 0, -1, -1, -1, 0, 1, 1, 1 };
 
 struct V {
 	int r, c, d;
+	int num;
 	V() {}
-	V(int _r, int _c, int _d): r(_r), c(_c), d(_d) {}
+	V(int _r, int _c, int _d, int _num): r(_r), c(_c), d(_d), num(_num) {}
 };
 
 bool is_in_range(int r, int c) {
@@ -20,19 +21,18 @@ bool is_in_range(int r, int c) {
 	return true;
 }
 
-int find_thief(int r, int c, vector<V>& ts) {
-	for (int i = 1; i <= ROW_SIZE * COL_SIZE; i++) {
+int find_thief_idx(int r, int c, vector<V>& ts) {
+	for (int i = 0; i < ts.size(); i++) {
 		V t = ts[i];
 		if (t.d == -1) continue;
 
 		if (t.r == r && t.c == c) return i;
 	}
-	return 0;
+	return -1;
 }
 
 void move_thieves(V& chaser, vector<V>& ts) {
-	vector<V> new_ts = ts;
-	for (int i = 1; i <= 16; i++) {
+	for (int i = 0; i < ts.size(); i++) {
 		// 잡힌 도둑 패스
 		if (ts[i].d == -1) continue;
 		
@@ -44,19 +44,18 @@ void move_thieves(V& chaser, vector<V>& ts) {
 			if (!is_in_range(nr, nc) 
 				|| (ts[i].r==chaser.r && ts[i].c==chaser.c)) {
 				ts[i].d++;
+				ts[i].d %= 8;
 
-				// 이동 불가
+				// 이동 불가한 경우 (는 있을수가 없긴 함)
 				if (ts[i].d == d_st) {
 					break;
 				}
 				continue;
 			}
 			
-			// 이동
-			int num_target = find_thief(nr, nc, ts);
-
+			int num_target = find_thief_idx(nr, nc, ts);
 			//빈칸
-			if (num_target == 0) {
+			if (num_target == -1) {
 				ts[i].r = nr;
 				ts[i].c = nc;
 			}
@@ -83,8 +82,8 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 		if (!is_in_range(nr, nc)) break;
 		
 		r = nr, c = nc;
-		int num_thief = find_thief(r, c, ts);
-		if (num_thief != 0) {
+		int num_thief = find_thief_idx(r, c, ts);
+		if (num_thief != -1) {
 			cands.push_back(num_thief);
 		}
 	}
@@ -94,12 +93,12 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 		return;
 	}
 
-	for (int num_thief: cands) {
-		V cand = ts[num_thief];
-		V chaser_next = V(cand.r, cand.c, ts[num_thief].d);
+	for (int ti: cands) {
+		V cand = ts[ti];
+		int score_next = score + cand.num;
+		V chaser_next = V(cand.r, cand.c, cand.d, chaser.num);
 		vector<V> ts_next = ts;
-		ts_next[num_thief] = V(-1, -1, -1);
-		int score_next = score + num_thief;
+		ts_next.erase(ts_next.begin() + ti);
 
 		dfs(chaser_next, ts_next, score_next);
 	}
@@ -108,23 +107,27 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 int main() {
 	V chaser;
 	// d==-1 이면 사망
-	vector<V> thieves(ROW_SIZE*COL_SIZE+1, V(-1, -1, -1));
+	vector<V> ts;
 
 	for (int i = 0, num, d; i < ROW_SIZE; i++) {
 		for (int j = 0; j < COL_SIZE; j++) {
 			scanf("%d %d", &num, &d);
 			d--;
-			thieves[num] = V(i, j, d);
+			ts.push_back(V(i, j, d, num));
 		}
 	}
-	// (0, 0)에 있는 도둑말 잡기
-	int score = 0;
-	int num_theif = find_thief(0, 0, thieves);
-	
-	chaser = V(0, 0, thieves[num_theif].d);
-	score += num_theif;
-	thieves[num_theif] = V(-1, -1, -1);
+	sort(ts.begin(), ts.end(), [](V& t1, V& t2) {
+		return t1.num < t2.num;
+		});
 
-	dfs(chaser, thieves, score);
+	// (0, 0)에 있는 도둑말 잡기
+	int ti = find_thief_idx(0, 0, ts);
+	int score_next = ts[ti].num;
+	chaser = V(0, 0, ts[ti].d, NUM_CHASER);
+	
+	vector<V> ts_next = ts;
+	ts_next.erase(ts_next.begin() + ti);
+
+	dfs(chaser, ts_next, score_next);
 	printf("%d", ans);
 }
