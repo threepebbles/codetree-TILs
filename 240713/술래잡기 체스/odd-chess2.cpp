@@ -68,7 +68,7 @@ void move_thieves(vector<vector<int>>& brd, vector<V>& ts) {
 }
 
 int ans;
-void dfs(V chaser, vector<vector<int>> brd, vector<V> ts, int score) {
+void dfs(V& chaser, vector<vector<int>>& brd, vector<V>& ts, int score) {
 	move_thieves(brd, ts);
 
 	vector<int> cands;
@@ -90,24 +90,21 @@ void dfs(V chaser, vector<vector<int>> brd, vector<V> ts, int score) {
 		return;
 	}
 
-	V tmp;
+	vector<vector<int>> brd_tmp = brd;
+	vector<V> ts_tmp = ts;
 	for (int num_thief: cands) {
 		V cand = ts[num_thief];
 		V chaser_next = V(cand.r, cand.c, ts[num_thief].d);
 		int score_next = score + num_thief;
 
-		tmp = ts[num_thief];
-		
 		brd[chaser.r][chaser.c] = 0;
 		brd[cand.r][cand.c] = NUM_CHASER;
 		ts[num_thief] = V(-1, -1, -1);
 
 		dfs(chaser_next, brd, ts, score + num_thief);
 		// 복원
-		brd[chaser.r][chaser.c] = NUM_CHASER;
-		brd[cand.r][cand.c] = num_thief;
-
-		ts[num_thief] = tmp;
+		brd = brd_tmp;
+		ts = ts_tmp;
 	}
 }
 
