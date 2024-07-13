@@ -24,7 +24,7 @@ bool is_in_range(int r, int c) {
 int find_thief_idx(int r, int c, vector<V>& ts) {
 	for (int i = 0; i < ts.size(); i++) {
 		V t = ts[i];
-		if (t.d == -1) continue;
+		if (t.num == -1) continue;
 
 		if (t.r == r && t.c == c) return i;
 	}
@@ -34,7 +34,7 @@ int find_thief_idx(int r, int c, vector<V>& ts) {
 void move_thieves(V& chaser, vector<V>& ts) {
 	for (int i = 0; i < ts.size(); i++) {
 		// 잡힌 도둑 패스
-		if (ts[i].d == -1) continue;
+		if (ts[i].num == -1) continue;
 
 		int d_st = ts[i].d;
 		int nd = ts[i].d;
@@ -55,15 +55,15 @@ void move_thieves(V& chaser, vector<V>& ts) {
 			}
 
 			ts[i].d = nd;
-			int num_target = find_thief_idx(nr, nc, ts);
+			int ti = find_thief_idx(nr, nc, ts);
 			//빈칸
-			if (num_target == -1) {
+			if (ti == -1) {
 				ts[i].r = nr;
 				ts[i].c = nc;
 			}
 			else {
-				ts[num_target].r = ts[i].r;
-				ts[num_target].c = ts[i].c;
+				ts[ti].r = ts[i].r;
+				ts[ti].c = ts[i].c;
 				ts[i].r = nr;
 				ts[i].c = nc;
 			}
@@ -84,9 +84,9 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 		if (!is_in_range(nr, nc)) break;
 
 		r = nr, c = nc;
-		int num_thief = find_thief_idx(r, c, ts);
-		if (num_thief != -1) {
-			cands.push_back(num_thief);
+		int ti = find_thief_idx(r, c, ts);
+		if (ti!= -1) {
+			cands.push_back(ti);
 		}
 	}
 	// 잡을 있는 도둑말이 없는 경우
@@ -100,7 +100,7 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 		int score_next = score + cand.num;
 		V chaser_next = V(cand.r, cand.c, cand.d, chaser.num);
 		vector<V> ts_next = ts;
-		ts_next.erase(ts_next.begin() + ti);
+		ts_next[ti].num = -1;
 
 		dfs(chaser_next, ts_next, score_next);
 	}
@@ -108,7 +108,7 @@ void dfs(V& chaser, vector<V>& ts, int score) {
 
 int main() {
 	V chaser;
-	// d==-1 이면 사망
+	// ts[i].num == -1 이면 잡힌 상태
 	vector<V> ts;
 
 	for (int i = 0, num, d; i < ROW_SIZE; i++) {
@@ -126,9 +126,9 @@ int main() {
 	int ti = find_thief_idx(0, 0, ts);
 	int score_next = ts[ti].num;
 	chaser = V(0, 0, ts[ti].d, NUM_CHASER);
-
+	
 	vector<V> ts_next = ts;
-	ts_next.erase(ts_next.begin() + ti);
+	ts_next[ti].num = -1;
 
 	dfs(chaser, ts_next, score_next);
 	printf("%d", ans);
