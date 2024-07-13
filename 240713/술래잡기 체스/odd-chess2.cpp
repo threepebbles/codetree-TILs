@@ -37,22 +37,24 @@ void move_thieves(V& chaser, vector<V>& ts) {
 		if (ts[i].d == -1) continue;
 		
 		int d_st = ts[i].d;
+		int nd = ts[i].d;
 		while (true) {
-			int nr = ts[i].r + dr[ts[i].d];
-			int nc = ts[i].c + dc[ts[i].d];
+			int nr = ts[i].r + dr[nd];
+			int nc = ts[i].c + dc[nd];
 			// 격자 밖이거나, 술래가 있는 경우
 			if (!is_in_range(nr, nc) 
 				|| (ts[i].r==chaser.r && ts[i].c==chaser.c)) {
-				ts[i].d++;
-				ts[i].d %= 8;
+				nd++;
+				nd %= 8;
 
 				// 이동 불가한 경우 (는 있을수가 없긴 함)
-				if (ts[i].d == d_st) {
+				if (nd == d_st) {
 					break;
 				}
 				continue;
 			}
 			
+			ts[i].d = nd;
 			int num_target = find_thief_idx(nr, nc, ts);
 			//빈칸
 			if (num_target == -1) {
