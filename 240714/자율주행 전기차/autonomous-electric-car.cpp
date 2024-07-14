@@ -49,14 +49,10 @@ int bfs(int r_st, int c_st, int r_target, int c_target) {
 	memset(dis, -1, sizeof(dis));
 	dis[r_st][c_st] = 0;
 
-	int dis_to_target = -1;
 	while (!que.empty()) {
 		V cur = que.front();
 		que.pop();
-		if (cur.r == r_target && cur.c == c_target) {
-			dis_to_target = dis[cur.r][cur.c];
-			break;
-		}
+
 		if (visited[cur.r][cur.c]) continue;
 		visited[cur.r][cur.c] = true;
 
@@ -71,7 +67,7 @@ int bfs(int r_st, int c_st, int r_target, int c_target) {
 			que.push(V(nr, nc));
 		}
 	}
-	return dis_to_target;
+	return dis[r_target][c_target];
 }
 
 int find_customer() {
