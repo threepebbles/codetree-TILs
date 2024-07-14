@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <queue>
+#include <algorithm>
+#include <memory.h>
 using namespace std;
 
 struct Car {
