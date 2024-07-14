@@ -36,7 +36,6 @@ const int dr[] = { -1, 1, 0, 0 };
 const int dc[] = { 0, 0, -1, 1 };
 
 int n, m, k;
-int brd[MAXN][MAXN];
 S state_brd[MAXN][MAXN];	// brd의 상태 저장 공간
 P players[MAXN * MAXN + 2];
 
@@ -76,14 +75,6 @@ V calc_next_state(P& player, int turn) {
 		else if (state_brd[nr][nc].pnum == player.num) {
 			priority2.push_back(V(nr, nc, d));
 		}
-		//else {
-		//	// 유효턴 확인. 사라진 플레이어 확인
-		//	if (turn - state_brd[nr][nc].t > k || players[state_brd[nr][nc].pnum].num == -1) {
-		//		// 유효턴이 지난 경우, 빈칸으로 초기화
-		//		state_brd[nr][nc].pnum = EMPTY_STATE;
-		//		priority1.push_back(V(nr, nc, d));
-		//	}
-		//}
 	}
 
 	V v_next;
@@ -103,16 +94,6 @@ struct Tmp {
 };
 
 bool proceed(int turn) {
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			if (players[state_brd[i][j].pnum].num == -1) {
-				state_brd[i][j] = S(0, 0);
-			}
-			if (turn - state_brd[i][j].t > k) {
-				state_brd[i][j] = S(0, 0);
-			}
-		}
-	}
 
 	vector<Tmp> tmp_brd[MAXN][MAXN];
 
@@ -135,13 +116,25 @@ bool proceed(int turn) {
 					players[pnum_remove].num = -1;
 				}
 				
-				// 플레이어 이동
+				// 살아남은 플레이어 이동
 				int pnum_owner = tmp_brd[i][j][0].pnum;
 				players[pnum_owner].r = i;
 				players[pnum_owner].c = j;
 				players[pnum_owner].d = tmp_brd[i][j][0].d;
 				state_brd[i][j].pnum = pnum_owner;
 				state_brd[i][j].t = turn;
+			}
+		}
+	}
+
+	// 맵 상태 초기화
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (players[state_brd[i][j].pnum].num == -1) {
+				state_brd[i][j] = S(0, 0);
+			}
+			else if (turn - state_brd[i][j].t >= k) {
+				state_brd[i][j] = S(0, 0);
 			}
 		}
 	}
@@ -159,14 +152,14 @@ bool proceed(int turn) {
 int main() {
 	scanf("%d %d %d", &n, &m, &k);
 	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			scanf("%d", &brd[i][j]);
+		for (int j = 0, pnum; j < n; j++) {
+			scanf("%d", &pnum);
 			// 0: 빈칸
 			// n(n!=0): 플레이어 번호
-			if (brd[i][j] != 0) {
-				players[brd[i][j]] = P(i, j, brd[i][j]);
+			if (pnum != 0) {
+				players[pnum] = P(i, j, pnum);
 				// brd[i][j] 플레이어가, 0턴에 독점 계약
-				state_brd[i][j] = S(brd[i][j], 0);
+				state_brd[i][j] = S(pnum, 0);
 			}
 			else {
 				state_brd[i][j] = S(0, 0);
