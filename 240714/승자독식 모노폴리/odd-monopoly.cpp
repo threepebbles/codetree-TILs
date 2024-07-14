@@ -59,7 +59,7 @@ V select_next_vertex_by_rule(P& player, vector<V>& cands) {
 	return cands[0];
 }
 
-V calc_next_state(P& player, int turn) {
+V calc_next_vertex(P& player, int turn) {
 	// 이동 우선순위
 	// priority1=1순위: 독점계약이 없는 칸
 	// priority2=2순위: 본인이 독점계약한 칸
@@ -69,7 +69,11 @@ V calc_next_state(P& player, int turn) {
 		int nr = player.r + dr[d];
 		int nc = player.c + dc[d];
 		if (!is_in_range(nr, nc)) continue;
-		if (state_brd[nr][nc].pnum == EMPTY_STATE) {
+
+		
+		if (state_brd[nr][nc].pnum == EMPTY_STATE
+			|| turn - state_brd[nr][nc].t > k) {
+			state_brd[nr][nc] = S(0, 0);
 			priority1.push_back(V(nr, nc, d));
 		}
 		else if (state_brd[nr][nc].pnum == player.num) {
@@ -90,18 +94,17 @@ V calc_next_state(P& player, int turn) {
 struct Tmp {
 	int pnum, d;
 	Tmp() {}
-	Tmp(int _n, int _d): pnum(_n), d(_d) {}
+	Tmp(int _n, int _d) : pnum(_n), d(_d) {}
 };
 
 bool proceed(int turn) {
-
 	vector<Tmp> tmp_brd[MAXN][MAXN];
 
 	// 모든 플레이어 이동
 	for (int pi = 1; pi <= m; pi++) {
 		// 제거된 플레이어
 		if (players[pi].num == -1) continue;
-		V v_next = calc_next_state(players[pi], turn);
+		V v_next = calc_next_vertex(players[pi], turn);
 
 		tmp_brd[v_next.r][v_next.c].push_back(Tmp(pi, v_next.d));
 	}
@@ -115,7 +118,7 @@ bool proceed(int turn) {
 					int pnum_remove = tmp_brd[i][j][k].pnum;
 					players[pnum_remove].num = -1;
 				}
-				
+
 				// 살아남은 플레이어 이동
 				int pnum_owner = tmp_brd[i][j][0].pnum;
 				players[pnum_owner].r = i;
@@ -123,18 +126,6 @@ bool proceed(int turn) {
 				players[pnum_owner].d = tmp_brd[i][j][0].d;
 				state_brd[i][j].pnum = pnum_owner;
 				state_brd[i][j].t = turn;
-			}
-		}
-	}
-
-	// 맵 상태 초기화
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			if (players[state_brd[i][j].pnum].num == -1) {
-				state_brd[i][j] = S(0, 0);
-			}
-			else if (turn - state_brd[i][j].t >= k) {
-				state_brd[i][j] = S(0, 0);
 			}
 		}
 	}
