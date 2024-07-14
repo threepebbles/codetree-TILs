@@ -42,11 +42,14 @@ bool is_in_range(int r, int c) {
 	return true;
 }
 
+
+int dis[MAXN][MAXN] = {};
+bool visited[MAXN][MAXN] = {};
 int bfs(int r_st, int c_st, int r_target, int c_target) {
 	queue<V> que;
 	que.push(V(r_st, c_st));
-	int dis[MAXN][MAXN] = {};
-	bool visited[MAXN][MAXN] = {};
+	
+	memset(visited, false, sizeof(visited));
 	memset(dis, -1, sizeof(dis));
 	dis[r_st][c_st] = 0;
 
@@ -74,8 +77,8 @@ int bfs(int r_st, int c_st, int r_target, int c_target) {
 int find_customer() {
 	queue<V> que;
 	que.push(V(car.r, car.c));
-	int dis[MAXN][MAXN] = {};
-	bool visited[MAXN][MAXN] = {};
+
+	memset(visited, false, sizeof(visited));
 	memset(dis, -1, sizeof(dis));
 	dis[car.r][car.c] = 0;
 
