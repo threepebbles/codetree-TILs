@@ -4,11 +4,12 @@
 #include <memory.h>
 using namespace std;
 
+typedef long long ll;
 struct Car {
 	int r, c;
-	int b;
+	ll b;
 	Car() {}
-	Car(int _r, int _c, int _b) :r(_r), c(_c), b(_b) {}
+	Car(int _r, int _c, ll _b) :r(_r), c(_c), b(_b) {}
 };
 
 struct C {
@@ -134,7 +135,7 @@ int main() {
 	int r_car, c_car;
 	scanf("%d %d", &r_car, &c_car);
 	r_car--, c_car--;
-	car = Car(r_car, c_car, c);
+	car = Car(r_car, c_car, (ll)c);
 
 	for (int i = 1; i <= m; i++) {
 		int r_st, c_st, r_ed, c_ed;
@@ -157,8 +158,8 @@ int main() {
 		}
 
 		if (dis1 + dis2 <= car.b) {
-			car.b -= dis1 + dis2;
-			car.b += dis2 * 2;
+			car.b -= (dis1 + dis2);
+			car.b += dis2 * 2ll;
 			car.r = c.r_ed;
 			car.c = c.c_ed;
 			c.is_arrive = true;
@@ -170,5 +171,5 @@ int main() {
 		}
 	}
 
-	printf("%d", car.b);
+	printf("%lld", car.b);
 }
