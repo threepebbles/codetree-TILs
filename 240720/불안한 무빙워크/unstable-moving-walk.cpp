@@ -21,17 +21,18 @@ bool proceed() {
 	mw.pop_back();
 
 	// 사람 한칸씩 이동
-	for (int i = n - 1; i > 0; i--) {
+	for (int i = n - 1; i >= 0; i--) {
 		if (mw[i].person) {
 			if (i + 1 == n) {
 				mw[i].person = false;
 				continue;
 			}
 
-			if (mw[i+1].person == true || mw[i + 1].duration == 0) {
+			if (mw[i + 1].person == true || mw[i + 1].duration == 0) {
 				continue;
 			}
 
+			mw[i].person = false;
 			mw[i + 1].person = true;
 			mw[i + 1].duration--;
 		}
