@@ -19,10 +19,14 @@ bool proceed() {
 	V last = mw[mw.size() - 1];
 	mw.insert(mw.begin(), last);
 	mw.pop_back();
+	if (mw[n].person) {
+		mw[n].person = false;
+	}
 
 	// 사람 한칸씩 이동
 	for (int i = n - 1; i >= 0; i--) {
 		if (mw[i].person) {
+			// 마지막 칸인 경우
 			if (i + 1 == n) {
 				mw[i].person = false;
 				continue;
