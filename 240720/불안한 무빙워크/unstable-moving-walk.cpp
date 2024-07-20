@@ -15,18 +15,20 @@ int n, k;
 vector<V> mw;
 
 bool proceed() {
-	// 한칸 시계방향 회전
+	// 한칸씩 오른쪽으로 회전
 	V last = mw[mw.size() - 1];
 	mw.insert(mw.begin(), last);
 	mw.pop_back();
+
+	// 마지막 칸 승객 하차
 	if (mw[n].person) {
 		mw[n].person = false;
 	}
 
-	// 사람 한칸씩 이동
+	// 승객 한칸씩 이동
 	for (int i = n - 1; i >= 0; i--) {
 		if (mw[i].person) {
-			// 마지막 칸인 경우
+			// 마지막 칸인 경우 하차
 			if (i + 1 == n) {
 				mw[i].person = false;
 				continue;
@@ -42,13 +44,13 @@ bool proceed() {
 		}
 	}
 
-	// 0번 칸에 사람 추가
+	// 0번 칸에 승객 추가
 	if (mw[0].person == false && mw[0].duration > 0) {
 		mw[0].person = true;
 		mw[0].duration--;
 	}
 
-	// 안정성이 0인칸이 k개 이상이면 종료
+	// 안정성이 0인칸이 k개 이상이면 true 반환
 	int cnt = 0;
 	for (int i = 0; i < 2 * n; i++) {
 		if (mw[i].duration == 0) cnt++;
