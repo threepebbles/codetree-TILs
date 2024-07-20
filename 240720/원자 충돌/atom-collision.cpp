@@ -73,13 +73,13 @@ void proceed() {
 			// 대각선으로 퍼지는 경우
 			if (udlr && diagonal) {
 				for (int nd = 1; nd < 8; nd += 2) {
-					brd[r][c].push_back(A(nw, nd, nv));
+					brd[r][c].push_back(A(nw, nv, nd));
 				}
 			}
 			// 상하좌우로 퍼지는 경우
 			else {
 				for (int nd = 0; nd < 8; nd += 2) {
-					brd[r][c].push_back(A(nw, nd, nv));
+					brd[r][c].push_back(A(nw, nv, nd));
 				}
 			}
 		}
