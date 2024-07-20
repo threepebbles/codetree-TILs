@@ -8,7 +8,7 @@ const int MAXN = 50;
 struct A {
 	int w, v, d;
 	A() {}
-	A(int _w, int _v, int _d): w(_w), v(_v), d(_d){}
+	A(int _w, int _v, int _d) : w(_w), v(_v), d(_d) {}
 };
 
 int n, m, k;
@@ -16,6 +16,7 @@ int dr[] = { -1, -1, 0, 1, 1, 1, 0, -1 };
 int dc[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 vector<A> brd[MAXN][MAXN];
 
+// O(n^2 * d)
 void proceed() {
 	// 1. 모든 원자 이동
 	// O(max(n^2, m)) = O(n^2)
@@ -42,9 +43,11 @@ void proceed() {
 
 
 	// 2. 합성
+	// O(n^2 * d)
 	for (int r = 0; r < n; r++) {
 		for (int c = 0; c < n; c++) {
 			if (new_brd[r][c].size() < 2) {
+				// 1칸에 1개만 있는 경우 그대로 보존
 				for (A& atom : new_brd[r][c]) {
 					brd[r][c].push_back(atom);
 				}
@@ -94,10 +97,11 @@ int main() {
 		brd[x][y].push_back(A(w, v, d));
 	}
 
+	// O(k * n^2 * d)
 	while (k--) {
 		proceed();
 	}
-	
+
 	int wsum = 0;
 	for (int r = 0; r < n; r++) {
 		for (int c = 0; c < n; c++) {
