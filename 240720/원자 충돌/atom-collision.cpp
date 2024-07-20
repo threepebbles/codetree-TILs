@@ -44,7 +44,13 @@ void proceed() {
 	// 2. 합성
 	for (int r = 0; r < n; r++) {
 		for (int c = 0; c < n; c++) {
-			if (new_brd[r][c].size() < 2) continue;
+			if (new_brd[r][c].size() < 2) {
+				for (A& atom : new_brd[r][c]) {
+					brd[r][c].push_back(atom);
+				}
+				continue;
+			}
+
 			int wsum = 0;
 			int vsum = 0;
 			int cnt = new_brd[r][c].size();
