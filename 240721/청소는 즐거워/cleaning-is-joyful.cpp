@@ -10,14 +10,15 @@ int brd[MAXN][MAXN];
 // 좌, 하, 우, 상 순서
 int dr[] = { 0, 1, 0, -1 };
 int dc[] = { -1, 0, 1, 0 };
-const vector<vector<int>> p_dust = {
+
+// 왼쪽으로 이동 시 퍼지는 비율
+const vector<vector<int>> dust_map_left = {
 	{0, 0, 2, 0, 0},
 	{0, 10, 7, 1, 0},
 	{5, 0, 0, 0, 0},
 	{0, 10, 7, 1, 0},
 	{0, 0, 2, 0, 0}
 };
-
 
 vector<vector<int>> rotate_counter_clockwise(vector<vector<int>>& p) {
 	vector<vector<int>> ret(p.size(), vector<int>(p.size(), 0));
@@ -26,7 +27,7 @@ vector<vector<int>> rotate_counter_clockwise(vector<vector<int>>& p) {
 	// r축 기준 양의 방향 90도 회전
 	// (c -s) (r)
 	// (s c)  (c)
-	// (0, -1)  (r)
+	// (0, -1)(r)
 	// (1, 0) (c) 
 	for (int i = 0; i < psz; i++) {
 		for (int j = 0; j < psz; j++) {
@@ -41,7 +42,7 @@ vector<vector<int>> rotate_counter_clockwise(vector<vector<int>>& p) {
 }
 
 vector<vector<int>> rotate_by_direction(int d) {
-	vector<vector<int>> ret = p_dust;
+	vector<vector<int>> ret = dust_map_left;
 	while (d--) {
 		ret = rotate_counter_clockwise(ret);
 	}
@@ -72,8 +73,9 @@ int main() {
 		int r_next = r_cur + dr[d_cur];
 		int c_next = c_cur + dc[d_cur];
 
-		// (r_cur, c_cur) -> (r_next, c_next)
-		int x = brd[r_next][c_next];	// 청소할 먼지양
+		// 청소기 (r_cur, c_cur) -> (r_next, c_next) 이동
+		// x: 청소할 먼지양
+		int x = brd[r_next][c_next];	
 		vector<vector<int>> dust_map = rotate_by_direction(d_cur);
 		int w_sum = 0;
 
@@ -89,7 +91,7 @@ int main() {
 				w_sum += w_cur;
 
 				if (is_in_range(r_taget, c_target)) {
-					diff[r_taget][c_target] = w_cur;		
+					diff[r_taget][c_target] = w_cur;
 				}
 				else {
 					// 격자 밖으로 떨어진 먼지
@@ -123,7 +125,7 @@ int main() {
 					brd[r_target][c_target] += diff[r_target][c_target];
 					// diff 초기화
 					diff[r_target][c_target] = 0;
-				}				
+				}
 			}
 		}
 
