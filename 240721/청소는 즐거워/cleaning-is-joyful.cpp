@@ -61,22 +61,46 @@ int main() {
 		}
 	}
 
-	int r_cur = n / 2, c_cur = n / 2;
-	int d_cur = 0;
-	int step = 1;
-	int step_remain = step;
-	int step_count = 0;
+	// 달팽이 그리기
+	vector<vector<int>> snail(n, vector<int>(n, 0));
+	int idx_cur = n * n;
+	int r_cur = 0, c_cur = 0;
+	int d_cur = 2;
+	snail[r_cur][c_cur] = idx_cur--;
+	while (idx_cur > 0) {
+		int r_next = r_cur + dr[d_cur];
+		int c_next = c_cur + dc[d_cur];
+
+		if (!is_in_range(r_next, c_next) || snail[r_next][c_next]) {
+			d_cur = (d_cur - 1 + 4) % 4;
+		}
+		r_next = r_cur + dr[d_cur];
+		c_next = c_cur + dc[d_cur];
+
+		snail[r_next][c_next] = idx_cur--;
+		r_cur = r_next, c_cur = c_next;
+	}
+
+	// 중심에서 시작
+	r_cur = n / 2, c_cur = n / 2;
 	vector<vector<int>> diff(n, vector<int>(n, 0));
 
 	int ans = 0;
-	while (r_cur != 0 || c_cur != 0) {
-		int r_next = r_cur + dr[d_cur];
-		int c_next = c_cur + dc[d_cur];
+	for (int turn = 0, r_next=r_cur, c_next=c_cur, d_next = d_cur; turn < n * n; turn++) {
+		for (int d = 0; d < 4; d++) {
+			int nr = r_cur + dr[d];
+			int nc = c_cur + dc[d];
+			if (!is_in_range(nr, nc)) continue;
+			if (snail[nr][nc] == snail[r_cur][c_cur] + 1) {
+				r_next = nr, c_next = nc, d_next = d;
+			}
+		}
+		if (r_next == r_cur && c_next == c_cur) break;
 
 		// 청소기 (r_cur, c_cur) -> (r_next, c_next) 이동
 		// x: 청소할 먼지양
 		int x = brd[r_next][c_next];	
-		vector<vector<int>> dust_map = rotate_by_direction(d_cur);
+		vector<vector<int>> dust_map = rotate_by_direction(d_next);
 		int w_sum = 0;
 
 		// 흩날릴 먼지양 계산
@@ -102,8 +126,8 @@ int main() {
 
 		// a% 칸에 해당하는 먼지양 계산
 		int w_rest = x - w_sum;
-		int r_a = r_next + dr[d_cur];
-		int c_a = c_next + dc[d_cur];
+		int r_a = r_next + dr[d_next];
+		int c_a = c_next + dc[d_next];
 		if (is_in_range(r_a, c_a)) {
 			diff[r_a][c_a] = w_rest;
 		}
@@ -130,18 +154,7 @@ int main() {
 		}
 
 		// 이동 정보 갱신
-		r_cur = r_next, c_cur = c_next;
-		step_remain--;
-		if (step_remain == 0) {
-			step_count++;
-			d_cur = (d_cur + 1) % 4;
-
-			if (step_count == 2) {
-				step++;
-				step_count = 0;
-			}
-			step_remain = step;
-		}
+		r_cur = r_next, c_cur = c_next, d_cur = d_next;
 	}
 
 	printf("%d", ans);
