@@ -82,15 +82,14 @@ int main() {
 			for (int j = 0; j < dust_map.size(); j++) {
 				int dr = i - dust_map.size() / 2;
 				int dc = j - dust_map.size() / 2;
+
+				int r_taget = r_next + dr;
+				int c_target = c_next + dc;
 				int w_cur = x * dust_map[i][j] / 100;
 				w_sum += w_cur;
 
-				// debug
-				if (w_cur > 0) {
-					int yy = 1;
-				}
-				if (is_in_range(r_next + dr, c_next + dc)) {
-					diff[r_next + dr][c_next + dc] = w_cur;		
+				if (is_in_range(r_taget, c_target)) {
+					diff[r_taget][c_target] = w_cur;		
 				}
 				else {
 					// 격자 밖으로 떨어진 먼지
@@ -113,11 +112,18 @@ int main() {
 
 		// 먼지양 갱신
 		brd[r_next][c_next] = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				brd[i][j] += diff[i][j];
-				// diff 초기화
-				diff[i][j] = 0;
+		for (int i = 0; i < dust_map.size(); i++) {
+			for (int j = 0; j < dust_map.size(); j++) {
+				int dr = i - dust_map.size() / 2;
+				int dc = j - dust_map.size() / 2;
+
+				int r_target = r_next + dr;
+				int c_target = c_next + dc;
+				if (is_in_range(r_target, c_target)) {
+					brd[r_target][c_target] += diff[r_target][c_target];
+					// diff 초기화
+					diff[r_target][c_target] = 0;
+				}				
 			}
 		}
 
