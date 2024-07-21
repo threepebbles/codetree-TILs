@@ -161,7 +161,7 @@ int calc_max_group_size(vector<vector<int>>& brd) {
 		}
 	}
 
-	int mx = -1;
+	int mx = 0;
 	for (int i = 1; i <= gnum; i++) {
 		mx = max(mx, gsz[i]);
 	}
@@ -195,5 +195,5 @@ int main() {
 
 	int remain = calc_remain(brd);
 	int max_group_size = calc_max_group_size(brd);
-	printf("%d %d", remain, max_group_size);
+	printf("%d\n%d", remain, max_group_size);
 }
