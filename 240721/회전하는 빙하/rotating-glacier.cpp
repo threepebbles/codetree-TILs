@@ -26,6 +26,7 @@ void update_mini_brd(int r, int c, int len, vector<vector<int>>& mini_brd, vecto
 }
 
 void dnc(int r, int c, int len, int lv_target, vector<vector<int>>& brd) {
+	// base condition
 	if (len == pow2[lv_target]) {
 		vector<vector<int>> tmp(len, vector<int>(len, 0));
 		vector<vector<int>> mini_brd(len/2, vector<int>(len/2, 0));
@@ -42,7 +43,7 @@ void dnc(int r, int c, int len, int lv_target, vector<vector<int>>& brd) {
 				mini_brd[i][j] = tmp[i][j];
 			}
 		}
-		update_mini_brd(r, c+len/2, len / 2, mini_brd, brd);
+		update_mini_brd(r, c + len / 2, len / 2, mini_brd, brd);
 
 		// 우측 상단 -> 우측 하단
 		for (int i = 0; i < len / 2; i++) {
@@ -58,7 +59,7 @@ void dnc(int r, int c, int len, int lv_target, vector<vector<int>>& brd) {
 				mini_brd[i][j] = tmp[len / 2 + i][len / 2 + j];
 			}
 		}
-		update_mini_brd(r + len/2, c, len / 2, mini_brd, brd);
+		update_mini_brd(r + len / 2, c, len / 2, mini_brd, brd);
 
 		// 좌측 하단 -> 좌측 상단
 		for (int i = 0; i < len / 2; i++) {
@@ -77,10 +78,9 @@ void dnc(int r, int c, int len, int lv_target, vector<vector<int>>& brd) {
 	dnc(r + len_next, c + len_next, len_next, lv_target, brd);
 }
 
+// O(2^n * 2^n * min(n, lv))
 void rotate(vector<vector<int>>& brd, int lv) {
 	int len = pow2[n];
-	// lv=2 -> len=pow2[2]
-
 	dnc(0, 0, len, lv, brd);
 }
 
@@ -89,6 +89,7 @@ bool is_in_range(int r, int c) {
 	return !(r < 0 || r >= pow2[n] || c < 0 || c >= pow2[n]);
 }
 
+// O(2^n * 2^n)
 void melting(vector<vector<int>>& brd) {
 	vector<vector<int>> diff(brd.size(), vector<int>(brd.size(), 0));
 	for (int i = 0; i < brd.size(); i++) {
@@ -126,6 +127,8 @@ int calc_remain(vector<vector<int>>& brd) {
 	return remain;
 }
 
+// O(2^n * 2^n * d)
+// d: 이동 가능한 방향 개수
 int calc_max_group_size(vector<vector<int>>& brd) {
 	vector<vector<int>> g(brd.size(), vector<int>(brd[0].size(), 0));
 	int gnum = 0;
@@ -183,6 +186,7 @@ int main() {
 		}
 	}
 
+	// O(q * 2^n * 2^n * n)
 	int lv;
 	while (q--) {
 		scanf("%d", &lv);
@@ -193,7 +197,10 @@ int main() {
 		melting(brd);
 	}
 
+	// O(2^n * 2^n)
 	int remain = calc_remain(brd);
+
+	// O(2^n * 2^n * d)
 	int max_group_size = calc_max_group_size(brd);
 	printf("%d\n%d", remain, max_group_size);
 }
