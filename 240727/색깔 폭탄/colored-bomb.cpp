@@ -81,13 +81,13 @@ int find_and_erase_bomb_group() {
 
 				queue<V> que;
 				que.push(V(i, j));
-				bombs.push_back(B(brd[i][j], i, j));
 				
 				while (!que.empty()) {
 					V cur = que.front();
 					que.pop();
 					if (visited[cur.r][cur.c]) continue;
 					visited[cur.r][cur.c] = true;
+					bombs.push_back(B(brd[cur.r][cur.c], cur.r, cur.c));
 
 					for (int d = 0; d < 4; d++) {
 						int nr = cur.r + dr[d];
@@ -96,9 +96,8 @@ int find_and_erase_bomb_group() {
 						if (visited[nr][nc]) continue;
 						if (brd[nr][nc] == EMPTY) continue;
 						if (brd[nr][nc] != RED && brd[nr][nc] != color) continue;
-						
+					
 						que.push(V(nr, nc));
-						bombs.push_back(B(brd[nr][nc], nr, nc));
 					}
 				}
 
@@ -156,7 +155,7 @@ void apply_gravity() {
 				new_brd[r][c] = STONE;
 
 				int sz = tmp.size();
-				for (int i = sz-1, nr = r-1; i>=0; i--, nr--) {
+				for (int i = sz - 1, nr = r - 1; i >= 0; i--, nr--) {
 					new_brd[nr][c] = tmp[i];
 				}
 				tmp.clear();
