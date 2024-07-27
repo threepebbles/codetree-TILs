@@ -64,6 +64,7 @@ bool is_in_range(int r, int c) {
 	return true;
 }
 
+// O(n^4 * m)
 int find_and_erase_bomb_group() {
 	// vector<B> bombs의 크기로 비교하므로 g는 초기화 안해줘도 런타임에러 발생x
 	G g;
@@ -139,6 +140,7 @@ int find_and_erase_bomb_group() {
 	return g.bombs.size() * g.bombs.size();
 }
 
+// O(n^2)
 void apply_gravity() {
 	vector<vector<int>> new_brd = vector<vector<int>>(n, vector<int>(n, 0));
 
@@ -170,6 +172,7 @@ void apply_gravity() {
 	brd = new_brd;
 }
 
+// O(n^2)
 void rotate_counter_clockwise() {
 	vector<vector<int>> new_brd = vector<vector<int>>(n, vector<int>(n, 0));
 	for (int c = n - 1, nr = 0; c >= 0; c--, nr++) {
@@ -196,7 +199,9 @@ int main() {
 	/*
 	폭탄 묶음이란
 	1. 상하좌우로 인접한 2개 이상의 폭탄 집합
-	2. 모두 같은 색의 폭탄이거나, 빨간색 폭탄(0)을 포함하여 2개의 색깔로만 이루어진 폭탄
+	2. 같은 집합 내의 폭탄
+		2.1. 모두 같은 색의 폭탄이거나
+		2.2. 빨간색 폭탄을 포함하여 2개의 색깔로만 이루어진 폭탄이어야 함
 	*/
 	
 	int score = 0;
