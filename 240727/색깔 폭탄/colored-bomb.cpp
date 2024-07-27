@@ -64,7 +64,7 @@ bool is_in_range(int r, int c) {
 	return true;
 }
 
-// O(n^4 * m)
+// O(n^2 * m)
 int find_and_erase_bomb_group() {
 	// vector<B> bombs의 크기로 비교하므로 g는 초기화 안해줘도 런타임에러 발생x
 	G g;
