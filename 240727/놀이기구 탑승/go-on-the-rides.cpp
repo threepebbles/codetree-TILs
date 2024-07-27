@@ -10,7 +10,6 @@ struct S {
         priv[1] = n2;
         priv[2] = n3;
         priv[3] = n4;
-        priv_cnt = 0;
     }
 };
 
