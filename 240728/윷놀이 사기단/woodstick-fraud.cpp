@@ -13,7 +13,7 @@ int score[NODE_SIZE];
 void build_graph() {
 	// 직선 코스
 	for (int i = 0; i <= 20; i++) {
-		if (i!=SOURCE && i!=20 && i % 5 == 0) continue;
+		if (i == 5 || i == 10 || i == 15) continue;
 		g[i] = vector<int>{ i + 1, min(SINK, i + 2), min(SINK, i + 3), min(SINK, i + 4), min(SINK, i + 5) };
 	}
 
@@ -60,15 +60,18 @@ void dfs(int mi, int score_cur) {
 		if (brd[idx_nxt]) continue;
 
 		horses[hi] = idx_nxt;
+		
+		brd[prev] = 0;
 		brd[idx_nxt] = hi;
 		dfs(mi + 1, score_cur + score[idx_nxt]);
+		brd[prev] = hi;
 		brd[idx_nxt] = 0;
+		
 		horses[hi] = prev;
 	}
 }
 
 int main() {
-	
 	for (int i = 0; i < 10; i++) {
 		scanf("%d", &move_cnt[i]);
 	}
