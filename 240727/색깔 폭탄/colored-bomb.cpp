@@ -101,6 +101,12 @@ int find_and_erase_bomb_group() {
 						bombs.push_back(B(brd[nr][nc], nr, nc));
 					}
 				}
+
+				// 폭탄 개수는 2개 이상이어야 함
+				if (bombs.size() < 2) {
+					continue;
+				}
+
 				G g_cur = G(bombs);
 
 				// 크기가 큰 폭탄 묶음 선택
@@ -200,7 +206,9 @@ int main() {
 	bool is_end = false;
 	while (!is_end) {
 		// 폭탄 묶음 탐색 및 제거
-		score += find_and_erase_bomb_group();
+		int score_cur = find_and_erase_bomb_group();
+		score += score_cur;
+		if (score_cur == 0) break;
 
 		// 중력 작용
 		apply_gravity();
@@ -210,17 +218,6 @@ int main() {
 		
 		// 중력 작용
 		apply_gravity();
-
-		// 게임 종료 여부 확인
-		int cnt = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (brd[i][j] != STONE && brd[i][j] != RED && brd[i][j] != EMPTY) {
-					cnt++;
-				}
-			}
-		}
-		if (cnt == 0) is_end = true;
 	}
 	
 	printf("%d", score);
