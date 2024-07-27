@@ -1,10 +1,8 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <cstdio>
 
 struct S {
     int num;
     int priv[4];
-    int priv_cnt;
     S() {}
     S(int n0, int n1, int n2, int n3, int n4) {
         num = n0;
@@ -80,8 +78,6 @@ void put_proper_place(int sidx) {
     }
 
     brd[r][c] = sidx;
-    students[sidx].priv_cnt = cnt_max;
-    //printf("n0:%d, r=%d, c=%d\n", students[sidx].num, r, c);
 }
 
 
@@ -105,7 +101,7 @@ int main() {
         for (int j = 0; j < n; j++) {
             int sidx = brd[i][j];
             int cnt_priv = 0;
-            
+
             for (int d = 0; d < 4; d++) {
                 int nr = i + dr[d];
                 int nc = j + dc[d];
