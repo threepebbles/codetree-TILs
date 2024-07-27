@@ -58,8 +58,11 @@ void dfs(int mi, int score_cur) {
 
 		int idx_nxt = g[prev][move_cnt[mi] - 1];
 		if (brd[idx_nxt]) continue;
+
 		horses[hi] = idx_nxt;
+		brd[idx_nxt] = hi;
 		dfs(mi + 1, score_cur + score[idx_nxt]);
+		brd[idx_nxt] = 0;
 		horses[hi] = prev;
 	}
 }
