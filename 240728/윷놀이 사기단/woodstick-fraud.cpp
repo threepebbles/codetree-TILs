@@ -50,24 +50,32 @@ void dfs(int mi, int score_cur) {
 		ans = max(ans, score_cur);
 		return;
 	}
+	// 모두 도착한 경우
+	int sink_cnt = 0;
+	for (int hi = 0; hi < 4; hi++) {
+		if (horses[hi] == SINK) sink_cnt++;
+	}
+	if (sink_cnt == 4) {
+		ans = max(ans, score_cur);
+		return;
+	}
 
 	for (int hi = 1; hi <= 4; hi++) {
 		if (horses[hi] == SINK) continue;
 
 		int prev = horses[hi];
-
 		int idx_nxt = g[prev][move_cnt[mi] - 1];
-		if (brd[idx_nxt]) continue;
+		if (idx_nxt!= SINK && brd[idx_nxt]) continue;
 
 		horses[hi] = idx_nxt;
-		
 		brd[prev] = 0;
 		brd[idx_nxt] = hi;
+
 		dfs(mi + 1, score_cur + score[idx_nxt]);
+
+		horses[hi] = prev;
 		brd[prev] = hi;
 		brd[idx_nxt] = 0;
-		
-		horses[hi] = prev;
 	}
 }
 
