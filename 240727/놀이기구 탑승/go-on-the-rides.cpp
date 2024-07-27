@@ -16,12 +16,6 @@ struct S {
     }
 };
 
-struct Crd {
-    int r, c;
-    Crd() {}
-    Crd(int _r, int _c) : r(_r), c(_c) {}
-};
-
 const int MAXN = 20;
 // 상 좌 우 하 순서
 const int dr[] = { -1, 0, 0, 1 };
