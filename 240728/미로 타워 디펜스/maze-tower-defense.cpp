@@ -58,49 +58,63 @@ void remove_empty_space() {
 	snail = new_snail;
 }
 
+struct T {
+	int num, cnt;
+	T() {}
+	T(int _n, int _c) : num(_n), cnt(_c) {}
+};
+
 int remove_consecutive(int cnt) {
 	int score = 0;
 
-	while (true) {
-		bool is_changed = false;
-		vector<int> new_snail;
+	vector<int> new_snail;
 
-		int num_cur = 0;
-		int cnt_cur = 0;
-
-		for (int m : snail) {
-			if (m == num_cur) {
-				cnt_cur++;
-			}
-			else {
-				if (cnt_cur < cnt) {
-					for (int i = 0; i < cnt_cur; i++) {
-						new_snail.push_back(num_cur);
-					}
-				}
-				else {
-					score += cnt_cur * num_cur;
-					is_changed = true;
-				}
-
-				num_cur = m;
-				cnt_cur = 1;
-			}
+	vector<T> st;
+	for (int i = 0; i < snail.size(); i++) {
+		if (st.empty()) {
+			st.push_back(T(snail[i], 1));
+			continue;
 		}
-		if (cnt_cur < cnt) {
-			for (int i = 0; i < cnt_cur; i++) {
-				new_snail.push_back(num_cur);
-			}
+
+		T& prev = st.back();
+		if (prev.num == snail[i]) {
+			prev.cnt++;
 		}
 		else {
-			score += cnt_cur * num_cur;
-			is_changed = true;
-		}
-		
-		snail = new_snail;
+			if (prev.cnt >= cnt) {
+				// 제거
+				score += prev.cnt * prev.num;
+				st.pop_back();
+			}
 
-		if (!is_changed) break;
+			if (!st.empty()) {
+				T& prev = st.back();
+				if (prev.num == snail[i]) {
+					prev.cnt++;
+				}
+				else {
+					st.push_back(T(snail[i], 1));
+				}
+			}
+			else {
+				st.push_back(T(snail[i], 1));
+			}
+			
+		}
 	}
+	T& prev = st.back();
+	if (prev.cnt >= cnt) {
+		// 제거
+		score += prev.cnt * prev.num;
+		st.pop_back();
+	}
+	for (int i = 0; i < st.size(); i++) {
+		for (int j = 0; j < st[i].cnt; j++) {
+			new_snail.push_back(st[i].num);
+		}
+	}
+
+	snail = new_snail;
 	return score;
 }
 
@@ -126,6 +140,10 @@ void convert_to_freq() {
 			new_snail.push_back(num_cur);
 		}
 	}
+	if (new_snail.size() > n * n - 1) {
+		new_snail.erase(new_snail.begin() + n * n - 1, new_snail.end());
+	}
+	
 	snail = new_snail;
 }
 
