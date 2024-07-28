@@ -67,42 +67,38 @@ int remove_consecutive(int cnt) {
 		bool is_changed = false;
 		vector<int> new_snail;
 
-		vector<int> tmp;
 		int num_cur = 0;
 		int cnt_cur = 0;
 
 		for (int m : snail) {
 			if (m == num_cur) {
-				tmp.push_back(m);
 				cnt_cur++;
 			}
 			else {
-				if (tmp.size() < cnt) {
-					for (int t : tmp) {
-						new_snail.push_back(t);
+				if (cnt_cur < cnt) {
+					for (int i = 0; i < cnt_cur; i++) {
+						new_snail.push_back(num_cur);
 					}
 				}
 				else {
 					score += cnt_cur * num_cur;
 					is_changed = true;
 				}
-				tmp.clear();
 
 				num_cur = m;
 				cnt_cur = 1;
-				tmp.push_back(m);
 			}
 		}
-		if (tmp.size() < cnt) {
-			for (int t : tmp) {
-				new_snail.push_back(t);
+		if (cnt_cur < cnt) {
+			for (int i = 0; i < cnt_cur; i++) {
+				new_snail.push_back(num_cur);
 			}
 		}
 		else {
 			score += cnt_cur * num_cur;
 			is_changed = true;
 		}
-		tmp.clear();
+		
 		snail = new_snail;
 
 		if (!is_changed) break;
