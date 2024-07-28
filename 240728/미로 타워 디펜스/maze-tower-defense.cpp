@@ -21,9 +21,7 @@ int monster_map[MAXN][MAXN];
 
 // 달팽이 배열 정보
 vector<int> snail;
-bool chk[MAXN][MAXN];
 int snail_idx[MAXN][MAXN];
-
 
 bool is_in_range(int r, int c) {
 	return !(r < 0 || r >= n || c < 0 || c >= n);
@@ -147,11 +145,10 @@ int main() {
 	snail_idx[r_cur][c_cur] = sidx;
 	snail_inverse.push_back(V(r_cur, c_cur));
 
-	chk[r_cur][c_cur] = true;
 	while (sidx > 0) {
 		int r_next = r_cur + dr[d_cur];
 		int c_next = c_cur + dc[d_cur];
-		if (!is_in_range(r_next, c_next) || chk[r_next][c_next]) {
+		if (!is_in_range(r_next, c_next) || snail_idx[r_next][c_next]) {
 			d_cur = (d_cur + 1) % 4;
 			r_next = r_cur + dr[d_cur];
 			c_next = c_cur + dc[d_cur];
@@ -159,7 +156,6 @@ int main() {
 
 		r_cur = r_next, c_cur = c_next;
 		sidx--;
-		chk[r_cur][c_cur] = true;
 		snail_idx[r_cur][c_cur] = sidx;
 		snail_inverse.push_back(V(r_cur, c_cur));
 	}
