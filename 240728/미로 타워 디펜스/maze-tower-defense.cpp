@@ -13,7 +13,7 @@ const int dc[] = { 1, 0, -1, 0 };
 struct V {
 	int r, c;
 	V() {}
-	V(int _r, int _c) : r(_r), c(_c){}
+	V(int _r, int _c) : r(_r), c(_c) {}
 };
 
 int n, m;
@@ -43,7 +43,7 @@ int attack_monster(int d, int p) {
 			snail[sidx] = 0;
 		}
 	}
-	
+
 	return score;
 }
 
@@ -58,63 +58,49 @@ void remove_empty_space() {
 	snail = new_snail;
 }
 
-struct T {
-	int num, cnt;
-	T() {}
-	T(int _n, int _c) : num(_n), cnt(_c) {}
-};
-
 int remove_consecutive(int cnt) {
 	int score = 0;
 
-	vector<int> new_snail;
+	while (true) {
+		bool is_changed = false;
+		vector<int> new_snail;
 
-	vector<T> st;
-	for (int i = 0; i < snail.size(); i++) {
-		if (st.empty()) {
-			st.push_back(T(snail[i], 1));
-			continue;
-		}
+		int num_cur = 0;
+		int cnt_cur = 0;
 
-		T& prev = st.back();
-		if (prev.num == snail[i]) {
-			prev.cnt++;
-		}
-		else {
-			if (prev.cnt >= cnt) {
-				// 제거
-				score += prev.cnt * prev.num;
-				st.pop_back();
-			}
-
-			if (!st.empty()) {
-				T& prev = st.back();
-				if (prev.num == snail[i]) {
-					prev.cnt++;
-				}
-				else {
-					st.push_back(T(snail[i], 1));
-				}
+		for (int m : snail) {
+			if (m == num_cur) {
+				cnt_cur++;
 			}
 			else {
-				st.push_back(T(snail[i], 1));
-			}
-			
-		}
-	}
-	T& prev = st.back();
-	if (prev.cnt >= cnt) {
-		// 제거
-		score += prev.cnt * prev.num;
-		st.pop_back();
-	}
-	for (int i = 0; i < st.size(); i++) {
-		for (int j = 0; j < st[i].cnt; j++) {
-			new_snail.push_back(st[i].num);
-		}
-	}
+				if (cnt_cur < cnt) {
+					for (int i = 0; i < cnt_cur; i++) {
+						new_snail.push_back(num_cur);
+					}
+				}
+				else {
+					score += cnt_cur * num_cur;
+					is_changed = true;
+				}
 
-	snail = new_snail;
+				num_cur = m;
+				cnt_cur = 1;
+			}
+		}
+		if (cnt_cur < cnt) {
+			for (int i = 0; i < cnt_cur; i++) {
+				new_snail.push_back(num_cur);
+			}
+		}
+		else {
+			score += cnt_cur * num_cur;
+			is_changed = true;
+		}
+
+		snail = new_snail;
+
+		if (!is_changed) break;
+	}
 	return score;
 }
 
@@ -130,7 +116,7 @@ void convert_to_freq() {
 		else {
 			new_snail.push_back(cnt_cur);
 			new_snail.push_back(num_cur);
-			
+
 			cnt_cur = 1;
 			num_cur = snail[i];
 		}
@@ -140,10 +126,11 @@ void convert_to_freq() {
 			new_snail.push_back(num_cur);
 		}
 	}
+
 	if (new_snail.size() > n * n - 1) {
 		new_snail.erase(new_snail.begin() + n * n - 1, new_snail.end());
 	}
-	
+
 	snail = new_snail;
 }
 
