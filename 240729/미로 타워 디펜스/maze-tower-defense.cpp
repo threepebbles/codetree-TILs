@@ -208,17 +208,7 @@ int main() {
 		remove_empty_space();
 
 		// 4번 이상 반복된 구간 삭제
-		puts("====반복 삭제전====");
-		for (int m : snail) {
-			printf("%d ", m);
-		}
-		puts("");
 		score += remove_consecutive(4);
-		puts("====반복 삭제후====");
-		for (int m : snail) {
-			printf("%d ", m);
-		}
-		puts("");
 
 		// 빈도수 변환
 		convert_to_freq();
